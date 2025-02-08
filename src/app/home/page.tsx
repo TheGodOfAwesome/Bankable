@@ -831,7 +831,7 @@ export default function HomePage() {
   const geminiCall = async (message: string) => {
     if (!message) return;
 
-    const promptPrefix = "When responding to the query at the end, please focus on providing clear, factual, and detailed guidance on how to correctly use the features on the 54 platform. Do not offer financial advice or personal recommendations. Your responses should help users understand how to set their financial goals, invest in the S&P 500, save in US dollars, and earn a yield through the platform. Always direct users to the appropriate tools and features within the site, ensuring they understand the steps required to use them effectively. ";
+    const promptPrefix = "When responding to the query at the end, please focus on providing clear, factual, and detailed guidance on how to correctly use the features on the 54 platform. Do not offer financial advice or personal recommendations. Your responses should help users understand how to set their financial goals, invest in the S&P 500, save in US dollars, and earn a yield through the platform. Always direct users to the appropriate tools and features within the site, ensuring they understand the steps required to use them effectively. If the question is about saving and or investing please mention Moonwell a DeFi platform that allows you earn a yield for deposited funds. ";
 
     // Simulate adding a user message to the chat
     const newChat = [...chat, message];
@@ -856,6 +856,11 @@ export default function HomePage() {
 
     const data = await res.json();
     const contentText = data.candidates[0].content.parts[0].text; // Extract the AI response text
+
+
+    if (contentText.includes("Moonwell")) {
+      setAssetHud(1);
+    }
 
     // Update chat with the AI response
     setChat((prevChat) => [...prevChat, contentText]);
@@ -1754,11 +1759,11 @@ export default function HomePage() {
                 quantity: (amountPaid).toString()
               })}
               onError={async (e) => {
-                alert("Quick Invest Error " + JSON.stringify(e.message))
+                alert("Moonwell Deposit Error " + JSON.stringify(e.message))
               }}
               onTransactionSent={async () => {
                 alert("Moonwell Deposit Started")
-
+                setAssetHud(0)
                 const transaction = prepareContractCall({
                   contract: USDC_CONTRACT_RETRIEVED,
                   method: "function transfer(address to, uint256 value)",
