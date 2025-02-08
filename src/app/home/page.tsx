@@ -198,6 +198,7 @@ import USDC from 'img/crypto/usdc.png';
 
 import stocks from 'img/products/stocks.jpg';
 import sandp from 'img/stocks/SANDP.png';
+import moon from 'img/moonwell/moonwell.png';
 
 import mobilemoney from '/public/img/avatars/EcoCash.jpg';
 import mobilemoney1 from '/public/img/avatars/innbucks.jpg';
@@ -287,6 +288,10 @@ export default function HomePage() {
 
   const [stockClosePrice, setStockClosePrice] = useState(0);
 
+  const [assetHud, setAssetHud] = useState(1);
+
+  const [depositMoonwell, setDepositMoonwell] = useState(false);
+
   const toast = useToast();
 
   const account = useActiveAccount();
@@ -297,14 +302,17 @@ export default function HomePage() {
   const DEX_CONTRACT = "0xbe3770d65275aF5f0c56ee4dde13747D4B15c7d1";
   const USDC_CONTRACT = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
 
+  const USDC_TEST_CONTRACT = "0x036CbD53842c5426634e7929541eC2318f3dCF7e";
+  const MOONWELL_CONTRACT = "0xED43df8625BD9101bCC25c03B17b36E0Bf5221F6";
+
   const switchChain = useSwitchActiveWalletChain();
 
   const { mutate: sendTx, data: transactionResult } = useSendTransaction();
 
   const USDC_CONTRACT_RETRIEVED = getContract({
     client: client3rdWeb,
-    chain: defineChain(base),
-    address: USDC_CONTRACT
+    chain: defineChain(baseSepolia),
+    address: USDC_TEST_CONTRACT
   });
 
   const {data: blncOfERC20} = useReadContract(
@@ -314,6 +322,18 @@ export default function HomePage() {
         client: client3rdWeb,
         chain: defineChain(base),
         address: DROP_CONTRACT
+      }),
+      address: walletAddress as `0x${string}` || ""  as `0x${string}`
+    }
+  );
+
+  const {data: blncOfMOONWELLERC20} = useReadContract(
+    balanceOfERC20,
+    {
+      contract: getContract({
+        client: client3rdWeb,
+        chain: defineChain(baseSepolia),
+        address: MOONWELL_CONTRACT
       }),
       address: walletAddress as `0x${string}` || ""  as `0x${string}`
     }
@@ -332,6 +352,14 @@ export default function HomePage() {
       client: client3rdWeb,
       chain: defineChain(base),
       address: DROP_CONTRACT
+    }
+  );
+
+  const tokenContractMoonwell = getContract(
+    {
+      client: client3rdWeb,
+      chain: defineChain(baseSepolia),
+      address: MOONWELL_CONTRACT
     }
   );
 
@@ -1010,112 +1038,142 @@ export default function HomePage() {
       >
         <Box textAlign="center" fontSize="xl" fontWeight="bold" color="gray.500">
           
-        <MiniStatistics
-          startContent={
-            <IconBox
-              w="56px"
-              h="56px"
-              bg={boxBg}
-              icon={
-                <Icon w="32px" h="32px" as={MdAttachMoney} color={brandColor} />
-              }
-            />
-          }
-          name="Total Invested"
-          value={"$" + walletAddress && blncOfERC20 ? Number(toEther(blncOfERC20)).toFixed(4) : "0"} 
-          // value="$0"   
-        />
-
-        <br/>
-
-        <MiniStatistics
-          startContent={
-            <IconBox
-              w="56px"
-              h="56px"
-              bg={boxBg}
-              icon={
-                <Icon w="32px" h="32px" as={MdAttachMoney} color={brandColor} />
-              }
-            />
-          }
-          name="Total Invested"
-          value={"$" + walletAddress && blncOfERC20 ? Number(toEther(blncOfERC20)).toFixed(4) : "0"} 
-          // value="$0"   
-        />
-          
-        
+        {
+          (assetHud == 0) &&
+          <>
           <MiniStatistics
-          startContent={
-            <IconBox
-              w="56px"
-              h="56px"
-              bg={boxBg}
-              icon={
-                <Icon w="32px" h="32px" as={MdAttachMoney} color={brandColor} />
-              }
-            />
-          }
-          name="Total Invested"
-          value={"$" + walletAddress && blncOfERC20 ? Number(toEther(blncOfERC20)).toFixed(4) : "0"} 
-          // value="$0"   
-        />
+            startContent={
+              <IconBox
+                w="56px"
+                h="56px"
+                bg={boxBg}
+                icon={
+                  <Icon w="32px" h="32px" as={MdAttachMoney} color={brandColor} />
+                }
+              />
+            }
+            name="Total Invested"
+            value={"$" + walletAddress && blncOfERC20 ? Number(toEther(blncOfERC20)).toFixed(4) : "0"} 
+            // value="$0"   
+          />
 
-        <br/>
+          <br/>
+
+          <MiniStatistics
+            startContent={
+              <IconBox
+                w="56px"
+                h="56px"
+                bg={boxBg}
+                icon={
+                  <Icon w="32px" h="32px" as={MdAttachMoney} color={brandColor} />
+                }
+              />
+            }
+            name="Total Invested"
+            value={"$" + walletAddress && blncOfERC20 ? Number(toEther(blncOfERC20)).toFixed(4) : "0"} 
+            // value="$0"   
+          />
+            
+          
+            <MiniStatistics
+            startContent={
+              <IconBox
+                w="56px"
+                h="56px"
+                bg={boxBg}
+                icon={
+                  <Icon w="32px" h="32px" as={MdAttachMoney} color={brandColor} />
+                }
+              />
+            }
+            name="Total Invested"
+            value={"$" + walletAddress && blncOfERC20 ? Number(toEther(blncOfERC20)).toFixed(4) : "0"} 
+            // value="$0"   
+          />
+
+          <br/>
 
 
-<MiniStatistics
-          startContent={
-            <IconBox
-              w="56px"
-              h="56px"
-              bg={boxBg}
-              icon={
-                <Icon w="32px" h="32px" as={MdAttachMoney} color={brandColor} />
-              }
-            />
-          }
-          name="Total Invested"
-          value={"$" + walletAddress && blncOfERC20 ? Number(toEther(blncOfERC20)).toFixed(4) : "0"} 
-          // value="$0"   
-        />
+  <MiniStatistics
+            startContent={
+              <IconBox
+                w="56px"
+                h="56px"
+                bg={boxBg}
+                icon={
+                  <Icon w="32px" h="32px" as={MdAttachMoney} color={brandColor} />
+                }
+              />
+            }
+            name="Total Invested"
+            value={"$" + walletAddress && blncOfERC20 ? Number(toEther(blncOfERC20)).toFixed(4) : "0"} 
+            // value="$0"   
+          />
 
-        <br/>
+          <br/>
 
 
-<MiniStatistics
-          startContent={
-            <IconBox
-              w="56px"
-              h="56px"
-              bg={boxBg}
-              icon={
-                <Icon w="32px" h="32px" as={MdAttachMoney} color={brandColor} />
-              }
-            />
-          }
-          name="Total Invested"
-          value={"$" + walletAddress && blncOfERC20 ? Number(toEther(blncOfERC20)).toFixed(4) : "0"} 
-          // value="$0"   
-        />
+  <MiniStatistics
+            startContent={
+              <IconBox
+                w="56px"
+                h="56px"
+                bg={boxBg}
+                icon={
+                  <Icon w="32px" h="32px" as={MdAttachMoney} color={brandColor} />
+                }
+              />
+            }
+            name="Total Invested"
+            value={"$" + walletAddress && blncOfERC20 ? Number(toEther(blncOfERC20)).toFixed(4) : "0"} 
+            // value="$0"   
+          />
 
-<br/>
+  <br/>
 
-<MiniStatistics
-          startContent={
-            <IconBox
-              w="56px"
-              h="56px"
-              bg={boxBg}
-              icon={
-                <Icon w="32px" h="32px" as={MdAttachMoney} color={brandColor} />
-              }
-            />
-          }
-          name="Total Invested"
-          value={"$" + walletAddress && blncOfERC20 ? Number(toEther(blncOfERC20)).toFixed(4) : "0"} 
-          // value="$0"   
-        />
+  <MiniStatistics
+            startContent={
+              <IconBox
+                w="56px"
+                h="56px"
+                bg={boxBg}
+                icon={
+                  <Icon w="32px" h="32px" as={MdAttachMoney} color={brandColor} />
+                }
+              />
+            }
+            name="Total Invested"
+            value={"$" + walletAddress && blncOfERC20 ? Number(toEther(blncOfERC20)).toFixed(4) : "0"} 
+            // value="$0"   
+          />
+          </>
+        }
+
+        {
+          (assetHud == 1) &&
+          <>
+            <Link
+              onClick={()=>{setDepositMoonwell(!depositMoonwell)}}
+            >
+              <MiniStatistics
+                startContent={
+                  <IconBox
+                    w="56px"
+                    h="56px"
+                    bg={boxBg}
+                    icon={
+                      <Icon w="32px" h="32px" as={MdBarChart} color={brandColor} />
+                    }
+                  />
+                }
+                name="Deposit funds into Moonwell."
+                value="Deposit"
+              />
+            </Link>
+          </>
+        }
+
 
         </Box>
       </Box>
@@ -1701,6 +1759,75 @@ export default function HomePage() {
 
             > 
               Quick Invest 
+            </TransactionButton>
+            <br/>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+
+      <Modal size="lg" isOpen={depositMoonwell} onClose={()=>setDepositMoonwell(false)}>
+        <ModalOverlay />
+        <ModalContent  style={{ width:"600px", maxWidth:"98vw"}}>
+          <ModalHeader>Deposit Funds</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <p>Deposit Funds into Moonwell</p>
+            <AspectRatio ratio={7 / 5}>
+              <Image src={moon.src} w={'100%'} borderRadius="20px" alt="" />
+            </AspectRatio>
+
+            <br/>
+
+            <p>Amount to Deposit</p>
+
+            <NumberInput 
+              defaultValue={1} 
+              min={1} 
+              max={Math.floor(walletAddress && blncOfERC20USDC ? Number(toEther(blncOfERC20USDC * BigInt(10 ** 12))) : 0)} 
+              value={amountPaid} 
+              onChange={(event)=>{setAmountPaid(Number(event))}} 
+              isDisabled={Math.floor(walletAddress && blncOfERC20USDC ? Number(toEther(blncOfERC20USDC * BigInt(10 ** 12))) : 0) < 1}
+            >
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+
+            <br/>
+            <TransactionButton
+              style={{
+                width:"100%", 
+                color:"white",
+                backgroundColor: "#4326ff"
+              }}
+              transaction={()=> claimERC20({
+                contract: tokenContractMoonwell,
+                to:  walletAddress as `0x${string}` || ""  as `0x${string}`,
+                quantity: (amountPaid/stockClosePrice).toString()
+              })}
+              onError={async (e) => {
+                alert("Quick Invest Error " + JSON.stringify(e.message))
+              }}
+              onTransactionSent={async () => {
+                alert("Quick Invest Started")
+
+                const transaction = prepareContractCall({
+                  contract: USDC_CONTRACT_RETRIEVED,
+                  method: "function transfer(address to, uint256 value)",
+                  params: ["0xD15BE984F5e58358b905B19e8fdAFced86954970", BigInt(amountPaid * (10 ** 6))],
+                });
+                
+                const result = await sendTx(transaction);
+                console.log(result);
+              }}
+              onTransactionConfirmed={async (res) => {
+                alert("Quick Invest Completed at " + res.transactionHash + " to see more visit " + "https://sepolia.basescan.org/tx/" + res.transactionHash)
+              }}
+
+            > 
+              Deposit Funds into Moonwell
             </TransactionButton>
             <br/>
           </ModalBody>
