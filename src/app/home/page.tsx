@@ -288,7 +288,7 @@ export default function HomePage() {
 
   const [stockClosePrice, setStockClosePrice] = useState(0);
 
-  const [assetHud, setAssetHud] = useState(1);
+  const [assetHud, setAssetHud] = useState(0);
 
   const [depositMoonwell, setDepositMoonwell] = useState(false);
 
@@ -1052,9 +1052,10 @@ export default function HomePage() {
                 }
               />
             }
-            name="Total Invested"
-            value={"$" + walletAddress && blncOfERC20 ? Number(toEther(blncOfERC20)).toFixed(4) : "0"} 
-            // value="$0"   
+            name="USDC Cash"
+            value={(walletAddress && blncOfERC20USDC) ? 
+              `$${toEther(blncOfERC20USDC * BigInt(10**12))}` : 
+              "$0.00"}  
           />
 
           <br/>
@@ -1070,32 +1071,13 @@ export default function HomePage() {
                 }
               />
             }
-            name="Total Invested"
-            value={"$" + walletAddress && blncOfERC20 ? Number(toEther(blncOfERC20)).toFixed(4) : "0"} 
-            // value="$0"   
-          />
-            
-          
-            <MiniStatistics
-            startContent={
-              <IconBox
-                w="56px"
-                h="56px"
-                bg={boxBg}
-                icon={
-                  <Icon w="32px" h="32px" as={MdAttachMoney} color={brandColor} />
-                }
-              />
-            }
-            name="Total Invested"
-            value={"$" + walletAddress && blncOfERC20 ? Number(toEther(blncOfERC20)).toFixed(4) : "0"} 
-            // value="$0"   
+            name="Eth"
+            value="0"   
           />
 
           <br/>
 
-
-  <MiniStatistics
+          <MiniStatistics
             startContent={
               <IconBox
                 w="56px"
@@ -1106,47 +1088,11 @@ export default function HomePage() {
                 }
               />
             }
-            name="Total Invested"
-            value={"$" + walletAddress && blncOfERC20 ? Number(toEther(blncOfERC20)).toFixed(4) : "0"} 
+            name="Moonwell Balance"
+            value={"$" + walletAddress && blncOfMOONWELLERC20 ? Number(toEther(blncOfMOONWELLERC20)).toFixed(3) : "0"} 
             // value="$0"   
           />
 
-          <br/>
-
-
-  <MiniStatistics
-            startContent={
-              <IconBox
-                w="56px"
-                h="56px"
-                bg={boxBg}
-                icon={
-                  <Icon w="32px" h="32px" as={MdAttachMoney} color={brandColor} />
-                }
-              />
-            }
-            name="Total Invested"
-            value={"$" + walletAddress && blncOfERC20 ? Number(toEther(blncOfERC20)).toFixed(4) : "0"} 
-            // value="$0"   
-          />
-
-  <br/>
-
-  <MiniStatistics
-            startContent={
-              <IconBox
-                w="56px"
-                h="56px"
-                bg={boxBg}
-                icon={
-                  <Icon w="32px" h="32px" as={MdAttachMoney} color={brandColor} />
-                }
-              />
-            }
-            name="Total Invested"
-            value={"$" + walletAddress && blncOfERC20 ? Number(toEther(blncOfERC20)).toFixed(4) : "0"} 
-            // value="$0"   
-          />
           </>
         }
 
@@ -1805,13 +1751,13 @@ export default function HomePage() {
               transaction={()=> claimERC20({
                 contract: tokenContractMoonwell,
                 to:  walletAddress as `0x${string}` || ""  as `0x${string}`,
-                quantity: (amountPaid/stockClosePrice).toString()
+                quantity: (amountPaid).toString()
               })}
               onError={async (e) => {
                 alert("Quick Invest Error " + JSON.stringify(e.message))
               }}
               onTransactionSent={async () => {
-                alert("Quick Invest Started")
+                alert("Moonwell Deposit Started")
 
                 const transaction = prepareContractCall({
                   contract: USDC_CONTRACT_RETRIEVED,
@@ -1823,7 +1769,7 @@ export default function HomePage() {
                 console.log(result);
               }}
               onTransactionConfirmed={async (res) => {
-                alert("Quick Invest Completed at " + res.transactionHash + " to see more visit " + "https://sepolia.basescan.org/tx/" + res.transactionHash)
+                alert("Moonwell Deposit Completed at " + res.transactionHash + " to see more visit " + "https://sepolia.basescan.org/tx/" + res.transactionHash)
               }}
 
             > 
